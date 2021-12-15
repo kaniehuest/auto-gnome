@@ -1,1 +1,48 @@
-paso1 ->
+paso1  -> Asegurarse que bootee en UEFI
+paso2  -> loadkeys dvorak-la
+paso3  -> timedatectl set-timezone America/Santiago
+paso4  -> timedatectl set-ntp true
+paso5  -> fdisk -l
+paso6  -> fdisk /dev/sda
+paso7  -> Presionar "g" y crear 3 particiones:
+                +300M para particion UEFI -- Tipo de particion "1" UEFI
+                +6G para particion SWAP -- Tipo de particion "19" SWAP
+                El resto para linux -- Tipo de partición por defecto "linux filesystem" 
+paso8  -> mkfs.fat -F 32 /dev/sda1
+paso9  -> mkswap/dev/sda2
+paso10 -> mkfs.ext4 /dev/sda3
+paso11 -> mount /dev/sda3 /mnt
+paso12 -> mkdir /mnt/boot
+paso13 -> mount /dev/sda1 /mnt/boot
+paso14 -> swapon /dev/sda2
+paso15 -> pacstrap /mnt base linux linux-firmware networkmanager neovim git
+paso16 -> genfstab -U /mnt >> /mnt/etc/fstab
+paso17 -> arch-chroot /mnt
+paso18 -> ln -sf /usr/share/zoneinfo/America/Santiago /etc/localtime
+paso19 -> hwclock --systohc
+paso20 -> nvim /etc/locale.gen # Descomentar es_CL.UTF-8 y es_CL.ISO-8859-1
+paso21 -> locale-gen
+paso22 -> echo "LANG=es_CL.UTF-8" > /etc/locale.conf
+paso23 -> echo "KEYMAP=dvorak-la" > /etc/vconsole.conf
+paso24 -> echo "lepra" > /etc/hostname
+paso25 -> nvim /etc/hosts
+# Agregar esto:
+#   127.0.0.1   localhost
+#   ::1         localhost
+#   127.0.1.1   lepra
+paso26 -> useradd -m -g users -G wheel lepra
+paso27 -> passwd lepra
+paso28 -> pacman -S sudo
+paso29 -> nvim /etc/sudoers
+# Escribir ":show number" y descomentar la línea 82
+paso30 -> mkdir /boot/grub
+paso31 -> grub-mkconfig -o /boot/grub/grub.cfg
+paso32 -> pacman -S efibootmgr
+paso33 -> grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
+paso34 -> systemctl enable NetworkManager
+paso35 -> passwd
+paso36 -> exit
+paso37 -> reboot
+paso38 -> sudo pacman -S archlinux-keyring
+paso39 -> sudo pacman -S gnome
+paso40 -> sudo systemctl enable gdm
