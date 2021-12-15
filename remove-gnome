@@ -1,0 +1,15 @@
+#!/bin/bash
+
+function delete_packages(){
+	packages_to_delete="gnome-boxes gnome-books gnome-calculator gnome-calendar gnome-maps gnome-music gnome-contacts gnome-weather cheese"
+	pacman -R $packages_to_delete
+}
+
+function install_packages(){
+	packages_to_install="xclip"
+	pacman S $packages_to_install
+}
+
+if [ "$(echo $UID)" != "0" ]; then
+	echo "You must run this script as root user"
+fi
