@@ -77,7 +77,7 @@ function dash_to_dock() {
 	wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip &>/dev/null
 	mkdir -p /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
 	7z x dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip &>/dev/null
-	cp /home/$1/dash-to-dock/* /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com &>/dev/null
+	cp -r /home/$1/dash-to-dock/* /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com &>/dev/null
 	rm -r /home/$1/dash-to-dock
 }
 
