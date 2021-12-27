@@ -65,20 +65,20 @@ function delete_packages(){
 
 function install_packages(){
 	echo "[+] Installing packages"
-	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip"
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip wget"
 	pacman -S $packages_to_install --noconfirm &>/dev/null
 }
 
 
 function dash_to_dock() {
 	echo "[+] Installing Dash to Dock"
-	mkdir /home/lepra/dash-to-dock
-	cd /home/lepra/dash-to-dock
+	mkdir /home/$1/dash-to-dock
+	cd /home/$1/dash-to-dock
 	wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip &>/dev/null
 	mkdir -p /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
-	7z x dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip
-	cp ./* /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com &>/dev/null
-	rm -r /home/lepra/dash-to-dock
+	7z x dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip &>/dev/null
+	cp /home/$1/dash-to-dock/* /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com &>/dev/null
+	rm -r /home/$1/dash-to-dock
 }
 
 function theme(){
@@ -87,16 +87,16 @@ function theme(){
 
 	echo "[+] Installing Orchis theme"
 	git clone https://github.com/vinceliuice/Orchis-theme &>/dev/null
-	cd Orchis-theme
+	cd /home/$1/github/Orchis-theme
 	pacman -S gtk-engine-murrine gnome-themes-extra gnome-themes-standard sassc --noconfirm &>/dev/null
-	./install.sh --tweaks solid
-	cd /home/$1/github
+	./install.sh --tweaks solid &>/dev/null
 
 	echo "[+] Installing Kora icons"
+	cd /home/$1/github
 	git clone https://github.com/bikass/kora.git &>/dev/null
-	cd ./kora
+	cd /home/$1/github/kora
 	mkdir -p /home/$1/.local/share/icons
-	cp -r ./kora* /home/$1/.local/share/icons
+	cp -r /home/$1/github/kora/kora* /home/$1/.local/share/icons
 }
 
 function conf_doas(){
@@ -111,8 +111,8 @@ function yay_install(){
 	echo "[+] Installing yay"
 	cd /opt
 	git clone https://aur.archlinux.org/yay.git &>/dev/null
-	chown -R $1:users ./yay
-	cd ./yay
+	chown -R $1:users /opt/yay
+	cd /opt/yay
 	doas -u $1 makepkg -si &>/dev/null
 
 	echo "[+] Installing yay packages"
