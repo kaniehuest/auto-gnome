@@ -135,7 +135,7 @@ function install_yay(){
 	sudo git clone https://aur.archlinux.org/yay.git &>/dev/null
 	sudo chown -R $1:users /opt/yay
 	cd /opt/yay
-	makepkg -si &>/dev/null
+	makepkg -si --noconfirm &>/dev/null
 }
 
 if [ "$(echo $UID)" == "0" ]; then
@@ -147,9 +147,9 @@ else
 	echo "[+] Updating packages..."
 	sudo pacman -Syu --noconfirm &>/dev/null
 
-	install_go $user
-	install_packages
 	delete_packages
+	install_packages
+	install_go $user
 	conf_doas
 	install_yay $user
 	theme $user
