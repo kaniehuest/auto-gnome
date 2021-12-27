@@ -1,9 +1,38 @@
 #!/bin/bash
 
 function install_tools(){
+	echo "[+] PortSwigger https://portswigger.net/burp/communitydownload"
 	cd /opt
 	git clone https://github.com/danielmiessler/SecLists
 	git clone https://github.com/carlospolop/PEASS-ng
+	git clone https://gitlab.com/kalilinux/packages/windows-binaries
+	git clone https://github.com/samratashok/nishang.git
+	git clone https://github.com/sqlmapproject/sqlmap.git
+
+	# Juicy Potato
+	mkdir Juicy-Potato
+	cd Juicy-Potato
+	wget https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe
+	cd ..
+
+	# Monkey PHP
+	mkdir monkey-php-shell
+	cd monkey-php-shell
+	wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php
+	cd ..
+
+	# Impacket
+	git clone https://github.com/SecureAuthCorp/impacket
+	cd impacket
+	python3 -m pip install .
+	cd ..
+	
+	# smbmap
+	git clone https://github.com/ShawnDEvans/smbmap.git
+	cd smbmap
+	python3 -m pip install -r requirements.txt
+	cd ..
+
 }
 
 function delete_packages(){
@@ -12,7 +41,7 @@ function delete_packages(){
 }
 
 function install_packages(){
-	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch"
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip"
 	pacman -S $packages_to_install --noconfirm &>/dev/null
 }
 
