@@ -1,27 +1,10 @@
 #!/bin/bash
 
-function install_alacritty(){
-        echo "[+] Installing alacritty"
-        sudo pacman -S cmake freetype2 fontconfig pkg-config make libxcb libxkbcommon python --noconfirm &>/dev/null
-	mkdir /home/$1/github
-        cd /home/$1/github
-        git clone https://github.com/alacritty/alacritty.git &>/dev/null
-        cd /home/$1/github/alacritty
-        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-        source $HOME/.cargo/env
-	cd /home/$1/github/alacritty
-	cargo build --release
-	sudo cp target/release/alacritty /usr/local/bin # or anywhere else in $PATH
-	sudo cp extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
-	sudo desktop-file-install extra/linux/Alacritty.desktop
-	sudo update-desktop-database
-}
-
 function install_zsh(){
-	echo "[+] Configuring alacritty"
+	echo "[+] Configuring zsh"
 	yay -S --noconfirm zsh-theme-powerlevel10k-git &>/dev/null
 	echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >> /home/$1/.zshrc
-	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$1/.zsh/zsh-autosuggestions
+	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$1/.zsh/zsh-autosuggestions &>/dev/null
 	echo "source /home/$1/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> /home/$1/.zshrc
 }
 
@@ -73,14 +56,13 @@ function delete_packages(){
 
 function install_packages(){
 	echo "[+] Installing packages"
-	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip wget"
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip wget alacritty"
 	sudo pacman -S $packages_to_install --noconfirm &>/dev/null
 
 	echo "[+] Installing yay packages"
-	yay_packages="librewolf brave-bin"
+	yay_packages="librewolf-bin brave-bin alacritty-themes"
 	yay -S $yay_packages --noconfirm &>/dev/null
 }
-
 
 function dash_to_dock() {
 	echo "[+] Installing Dash to Dock"
@@ -113,8 +95,8 @@ function theme(){
 
 function conf_doas(){
 	echo "[+] Editing doas.conf"
-	echo "permit :wheel" > /etc/doas.conf
-	echo "permit :root" >> /etc/doas.conf
+	sudo echo "permit :wheel" > /etc/doas.conf
+	sudo echo "permit :root" >> /etc/doas.conf
 	sudo chown -c root:root /etc/doas.conf &>/dev/null
 	sudo chmod -c 0400 /etc/doas.conf &>/dev/null
 }
@@ -156,5 +138,4 @@ else
 	dash_to_dock $user
 	install_tools
 	install_zsh $user
-	install_alacritty $user
 fi
