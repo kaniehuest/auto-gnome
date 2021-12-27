@@ -30,32 +30,31 @@ function install_tools(){
 
 	# Juicy Potato
 	echo "[+] Installing Juicy Potato"
-	mkdir Juicy-Potato
-	cd Juicy-Potato
+	mkdir /opt/Juicy-Potato
+	cd /opt/Juicy-Potato
 	wget https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe &>/dev/null
-	cd ..
+	cd /opt
 
 	# Monkey PHP
 	echo "[+] Installing Monkey PHP Shell"
-	mkdir monkey-php-shell
-	cd monkey-php-shell
+	mkdir /opt/monkey-php-shell
+	cd /opt/monkey-php-shell
 	wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php &>/dev/null
-	cd ..
+	cd /opt
 
 	# Impacket
 	echo "[+] Installing Impacket"
 	git clone https://github.com/SecureAuthCorp/impacket &>/dev/null
-	cd impacket
+	cd /opt/impacket
 	python3 -m pip install . &>/dev/null
-	cd ..
+	cd /opt
 	
 	# smbmap
 	echo "[+] Installing Smbmap"
 	git clone https://github.com/ShawnDEvans/smbmap.git &>/dev/null
-	cd smbmap
+	cd /opt/smbmap
 	python3 -m pip install -r requirements.txt &>/dev/null
-	cd ..
-
+	cd /opt
 }
 
 function delete_packages(){
@@ -66,16 +65,20 @@ function delete_packages(){
 
 function install_packages(){
 	echo "[+] Installing packages"
-	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh"
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip"
 	pacman -S $packages_to_install --noconfirm &>/dev/null
 }
 
 
 function dash_to_dock() {
 	echo "[+] Installing Dash to Dock"
+	mkdir /home/lepra/dash-to-dock
+	cd /home/lepra/dash-to-dock
 	wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip &>/dev/null
-	mkdir -p /home/$1/.local/share/gnome-shell/extensions
-	unzip dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip -d /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com &>/dev/null
+	mkdir -p /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
+	7z x dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip
+	cp ./* /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com &>/dev/null
+	rm -r /home/lepra/dash-to-dock
 }
 
 function theme(){
@@ -86,7 +89,7 @@ function theme(){
 	git clone https://github.com/vinceliuice/Orchis-theme &>/dev/null
 	cd Orchis-theme
 	pacman -S gtk-engine-murrine gnome-themes-extra gnome-themes-standard sassc --noconfirm &>/dev/null
-	./install --tweaks solid
+	./install.sh --tweaks solid
 	cd /home/$1/github
 
 	echo "[+] Installing Kora icons"
@@ -126,11 +129,11 @@ else
 	read user
 	conf_doas
 	yay_install $user
+	install_packages
 	theme $user
 	dash_to_dock $user
-	delete_packages
-	install_packages
 	install_tools
 	install_alacritty $user
 	install_zsh $user
+	delete_packages
 fi
