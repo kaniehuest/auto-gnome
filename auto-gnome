@@ -1,21 +1,23 @@
 #!/bin/bash
 
+function install_tools(){
+	cd /opt
+	git clone https://github.com/danielmiessler/SecLists
+	git clone https://github.com/carlospolop/PEASS-ng
+}
+
 function delete_packages(){
 	packages_to_delete="gnome-boxes gnome-books gnome-calculator gnome-calendar gnome-maps gnome-music gnome-contacts gnome-weather cheese"
 	pacman -R $packages_to_delete --noconfirm &>/dev/null
 }
 
 function install_packages(){
-	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas"
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch"
 	pacman -S $packages_to_install --noconfirm &>/dev/null
 }
 
-function vmware(){
-	pacman -S open-vm-tools --noconfirm &>/dev/null
-}
 
-
-function dash-to-dock() {
+function dash_to_dock() {
 	echo "[+] Installing Dash to Dock"
 	wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip &>/dev/null
 	mkdir -p /home/$1/.local/share/gnome-shell/extensions
@@ -29,7 +31,7 @@ function theme(){
 	echo "[+] Installing Orchis theme"
 	git clone https://github.com/vinceliuice/Orchis-theme &>/dev/null
 	cd Orchis-theme
-	pacman -S gtk-engine-murrine gnome-themes-extra gnome-themes-standard sassc --noconfirm
+	pacman -S gtk-engine-murrine gnome-themes-extra gnome-themes-standard sassc --noconfirm &>/dev/null
 	./install --tweaks solid
 	cd /home/$1/github
 
@@ -50,6 +52,7 @@ function conf_doas(){
 
 
 function yay_install(){
+	echo "[+] Installing yay"
 	cd /opt
 	git clone https://aur.archlinux.org/yay.git &>/dev/null
 	chown -R $1:users ./yay
@@ -69,4 +72,6 @@ else
 	theme $user
 	dash_to_dock $user
 	vmware
+	delete_packages
+	install_packages
 fi
