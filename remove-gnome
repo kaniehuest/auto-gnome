@@ -2,14 +2,34 @@
 
 function delete_packages(){
 	packages_to_delete="gnome-boxes gnome-books gnome-calculator gnome-calendar gnome-maps gnome-music gnome-contacts gnome-weather cheese"
-	pacman -R $packages_to_delete
+	pacman -R $packages_to_delete --no-confirm
 }
 
 function install_packages(){
-	packages_to_install="xclip"
-	pacman S $packages_to_install
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks"
+	pacman -S $packages_to_install --no-confirm
+}
+
+function vmware(){
+	pacman -S open-vm-tools --no-confirm
+}
+
+function icons(){
+	git clone https://github.com/vinceliuice/Tela-icon-theme
+	cd Tela-icon-theme
+	./install.sh
+}
+
+function theme(){
+	cd ..
+	git clone https://github.com/vinceliuice/Orchis-theme
+	cd Orchis-theme
+	pacman -S gtk-engine-murrine gnome-themes-extra gnome-themes-standard sassc
+	./install
 }
 
 if [ "$(echo $UID)" != "0" ]; then
 	echo "You must run this script as root user"
+	pacman -Syu --no-confirm
+
 fi
