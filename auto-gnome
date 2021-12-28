@@ -1,0 +1,68 @@
+#!/bin/bash
+
+function delete_packages(){
+	packages_to_delete="gnome-boxes gnome-books gnome-calculator gnome-calendar gnome-maps gnome-music gnome-contacts gnome-weather cheese"
+	pacman -R $packages_to_delete --noconfirm
+}
+
+function install_packages(){
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas"
+	pacman -S $packages_to_install --noconfirm
+}
+
+function vmware(){
+	pacman -S open-vm-tools --noconfirm
+}
+
+
+function dash-to-dock() {
+	mkdir -p ~/.local/share/gnome-shell/extensions
+	unzip dash-to-dock@micxgx.gmail.com.zip \
+	-d ~/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
+}
+
+function theme(){
+	mkdir ~/github
+	cd ~/github
+	git clone https://github.com/vinceliuice/Orchis-theme
+	cd Orchis-theme
+	pacman -S gtk-engine-murrine gnome-themes-extra gnome-themes-standard sassc
+	./install --tweaks solid
+
+	cd ~/github
+	git clone https://github.com/bikass/kora.git
+	cd kora
+	cp -r ./kora* ~/.local/share/icons
+
+}
+
+function conf_doas(){
+	echo "permit :wheel" > /etc/doas.conf
+	echo "permit :root" >> /etc/doas.conf
+	chown -c root:root /etc/doas.conf
+	chmod -c 0400 /etc/doas.conf
+}
+
+
+function yay_install(){
+	echo "Username is:"
+	echo $1
+	cd /opt
+	git clone https://aur.archlinux.org/yay.git > /dev/null 2>&1
+	chown -R $1:users ./yay
+	cd ./yay
+	doas -u $1 makepkg -si 2>&1
+}
+
+if [ "$(echo $UID)" != "0" ]; then
+	echo "You must run this script as root user"
+else
+	echo "[+] Updating packages..."
+	#pacman -Syu --noconfirm > /dev/null 2>&1
+	echo "Enter your username: "
+	read user
+	conf_doas
+	yay_install $user
+
+	theme
+fi
