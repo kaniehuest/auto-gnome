@@ -1,47 +1,72 @@
 #!/bin/bash
 
+function install_zsh(){
+	echo "[+] Configuring alacritty"
+	doas -u lepra yay -S --noconfirm zsh-theme-powerlevel10k-git &>/dev/null
+	echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >> /home/$1/.zshrc
+	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$1/.zsh/zsh-autosuggestions
+	echo "source /home/$1/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> /home/$1/.zshrc
+}
+
+function install_alacritty(){
+	echo "[+] Installing alacritty"
+	cd /home/$1/github
+	git clone https://github.com/alacritty/alacritty.git &>/dev/null
+	cd alacritty
+	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh &>/dev/null
+	pacman -S cmake freetype2 fontconfig pkg-config make libxcb libxkbcommon python --noconfirm &>/dev/null
+	echo "[!] You need to restart and run alacritty2.sh"
+}
+
 function install_tools(){
 	echo "[+] PortSwigger https://portswigger.net/burp/communitydownload"
+	echo "[+] Installing tools"
 	cd /opt
-	git clone https://github.com/danielmiessler/SecLists
-	git clone https://github.com/carlospolop/PEASS-ng
-	git clone https://gitlab.com/kalilinux/packages/windows-binaries
-	git clone https://github.com/samratashok/nishang.git
-	git clone https://github.com/sqlmapproject/sqlmap.git
+	git clone https://github.com/danielmiessler/SecLists &>/dev/null
+	git clone https://github.com/carlospolop/PEASS-ng &>/dev/null
+	git clone https://gitlab.com/kalilinux/packages/windows-binaries &>/dev/null
+	git clone https://github.com/samratashok/nishang.git &>/dev/null
+	git clone https://github.com/sqlmapproject/sqlmap.git &>/dev/null
 
 	# Juicy Potato
+	echo "[+] Installing Juicy Potato"
 	mkdir Juicy-Potato
 	cd Juicy-Potato
-	wget https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe
+	wget https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe &>/dev/null
 	cd ..
 
 	# Monkey PHP
+	echo "[+] Installing Monkey PHP Shell"
 	mkdir monkey-php-shell
 	cd monkey-php-shell
-	wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php
+	wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php &>/dev/null
 	cd ..
 
 	# Impacket
-	git clone https://github.com/SecureAuthCorp/impacket
+	echo "[+] Installing Impacket"
+	git clone https://github.com/SecureAuthCorp/impacket &>/dev/null
 	cd impacket
-	python3 -m pip install .
+	python3 -m pip install . &>/dev/null
 	cd ..
 	
 	# smbmap
-	git clone https://github.com/ShawnDEvans/smbmap.git
+	echo "[+] Installing Smbmap"
+	git clone https://github.com/ShawnDEvans/smbmap.git &>/dev/null
 	cd smbmap
-	python3 -m pip install -r requirements.txt
+	python3 -m pip install -r requirements.txt &>/dev/null
 	cd ..
 
 }
 
 function delete_packages(){
+	echo "[+] Deleting packages"
 	packages_to_delete="gnome-boxes gnome-books gnome-calculator gnome-calendar gnome-maps gnome-music gnome-contacts gnome-weather cheese"
 	pacman -R $packages_to_delete --noconfirm &>/dev/null
 }
 
 function install_packages(){
-	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip"
+	echo "[+] Installing packages"
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh"
 	pacman -S $packages_to_install --noconfirm &>/dev/null
 }
 
@@ -79,7 +104,6 @@ function conf_doas(){
 	chmod -c 0400 /etc/doas.conf &>/dev/null
 }
 
-
 function yay_install(){
 	echo "[+] Installing yay"
 	cd /opt
@@ -87,6 +111,10 @@ function yay_install(){
 	chown -R $1:users ./yay
 	cd ./yay
 	doas -u $1 makepkg -si &>/dev/null
+
+	echo "[+] Installing yay packages"
+	yay_packages="librewolf brave-bin"
+	doas -u lepra yay -S $yay_packages --noconfirm &>/dev/null
 }
 
 if [ "$(echo $UID)" != "0" ]; then
@@ -100,7 +128,9 @@ else
 	yay_install $user
 	theme $user
 	dash_to_dock $user
-	vmware
 	delete_packages
 	install_packages
+	install_tools
+	install_alacritty $user
+	install_zsh $user
 fi
