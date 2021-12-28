@@ -122,8 +122,8 @@ function conf_doas(){
 function install_go(){
 	mkdir /home/$1/temporal
 	cd /home/$1/temporal
-	wget https://go.dev/dl/go1.17.5.linux-amd64.tar.gz
-	tar xvzf go1.17.5.linux-amd64.tar.gz
+	wget https://go.dev/dl/go1.17.5.linux-amd64.tar.gz &>/dev/null
+	tar xvzf go1.17.5.linux-amd64.tar.gz &>/dev/null
 	sudo mv go /usr/local
 	export PATH=$PATH:/usr/local/go/bin
 	source $HOME/.bash_profile
