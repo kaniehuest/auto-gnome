@@ -1,11 +1,23 @@
 #!/bin/bash
 
+function hack_font(){
+	# To test
+	mkdir /home/$1/hack-font
+	cd /home/$1/hack-font
+	wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
+	7z x Hack.zip
+	sudo mkdir -p /usr/share/fonts/hack
+	cp ./*ttf /usr/share/fonts/hack
+	rm /home/$1/hack-font
+}
+
 function install_zsh(){
 	echo "[+] Configuring zsh"
 	yay -S --noconfirm zsh-theme-powerlevel10k-git &>/dev/null
 	echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >> /home/$1/.zshrc
 	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$1/.zsh/zsh-autosuggestions &>/dev/null
 	echo "source /home/$1/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> /home/$1/.zshrc
+	cp /usr/share/doc/alacritty/example/alacritty.yml ~/.alacritty.yml
 }
 
 function install_tools(){
