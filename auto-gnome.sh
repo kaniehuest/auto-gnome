@@ -56,12 +56,8 @@ function delete_packages(){
 
 function install_packages(){
 	echo "[+] Installing packages"
-	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip wget alacritty"
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip wget alacritty openvpn"
 	sudo pacman -S $packages_to_install --noconfirm &>/dev/null
-
-	echo "[+] Installing yay packages"
-	yay_packages="librewolf-bin brave-bin alacritty-themes"
-	yay -S $yay_packages --noconfirm &>/dev/null
 }
 
 function dash_to_dock() {
@@ -118,6 +114,10 @@ function install_yay(){
 	sudo chown -R $1:users /opt/yay
 	cd /opt/yay
 	makepkg -si --noconfirm &>/dev/null
+
+	echo "[+] Installing yay packages"
+	yay_packages="librewolf-bin brave-bin alacritty-themes"
+	yay -S $yay_packages --noconfirm &>/dev/null
 }
 
 if [ "$(echo $UID)" == "0" ]; then
