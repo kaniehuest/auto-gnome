@@ -2,20 +2,22 @@
 
 
 function alacritty_install(){
-	cd /home/lepra/github/alacritty
+        echo "[+] Installing alacritty"
+        sudo pacman -S cmake freetype2 fontconfig pkg-config make libxcb libxkbcommon python --noconfirm &>/dev/null
+	mkdir /home/$1/github
+        cd /home/$1/github
+        git clone https://github.com/alacritty/alacritty.git &>/dev/null
+        cd /home/$1/github/alacritty
+        curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+        source $HOME/.cargo/env
+	cd /home/$1/github/alacritty
 	cargo build --release
-
-	cp target/release/alacritty /usr/local/bin
-	cp extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
-	desktop-file-install extra/linux/Alacritty.desktop
-	update-desktop-database
+	sudo cp target/release/alacritty /usr/local/bin # or anywhere else in $PATH
+	sudo cp extra/logo/alacritty-term.svg /usr/share/pixmaps/Alacritty.svg
+	sudo desktop-file-install extra/linux/Alacritty.desktop
+	sudo update-desktop-database
 }
 
-if [ "$(echo $UID)" != "0" ]; then
-	echo "You must run this script as root user"
-else
-	echo "Enter your username: "
-	read user
-	alacritty_install
-fi
-
+echo "Enter your username:"
+read user
+alacritty_install2 $user

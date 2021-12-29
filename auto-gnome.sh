@@ -8,15 +8,6 @@ function install_zsh(){
 	echo "source /home/$1/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> /home/$1/.zshrc
 }
 
-function install_alacritty(){
-	echo "[+] Installing alacritty"
-	cd /home/$1/github
-	git clone https://github.com/alacritty/alacritty.git &>/dev/null
-	cd alacritty
-	curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh &>/dev/null
-	pacman -S cmake freetype2 fontconfig pkg-config make libxcb libxkbcommon python --noconfirm &>/dev/null
-	echo "[!] You need to restart and run alacritty2.sh"
-}
 
 function install_tools(){
 	echo "[+] PortSwigger https://portswigger.net/burp/communitydownload"
@@ -133,7 +124,6 @@ else
 	theme $user
 	dash_to_dock $user
 	install_tools
-	install_alacritty $user
 	install_zsh $user
 	delete_packages
 fi
