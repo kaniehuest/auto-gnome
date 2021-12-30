@@ -1,0 +1,78 @@
+# Configuration for Alacritty, the GPU enhanced terminal emulator.
+
+items:
+  - colors:
+      name: 3024 (dark)
+      author: Chris Kempson
+      primary:
+        background: "#090300"
+        foreground: "#a5a2a2"
+      cursor:
+        text: "#090300"
+        cursor: "#a5a2a2"
+      normal:
+        black: "#090300"
+        red: "#db2d20"
+        green: "#01a252"
+        yellow: "#fded02"
+        blue: "#01a0e4"
+        magenta: "#a16a94"
+        cyan: "#b5e4f4"
+        white: "#a5a2a2"
+      bright:
+        black: "#5c5855"
+        red: "#db2d20"
+        green: "#01a252"
+        yellow: "#fded02"
+        blue: "#01a0e4"
+        magenta: "#a16a94"
+        cyan: "#b5e4f4"
+        white: "#f7f7f7"
+  - theme: 3024.dark
+colors:
+  name: Count Von Count
+  author: Baskerville
+  primary:
+    background: "#000000"
+    foreground: "#919191"
+  cursor:
+    text: "#000000"
+    cursor: "#919191"
+  normal:
+    black: "#303030"
+    red: "#c10023"
+    green: "#a83334"
+    yellow: "#b51d2c"
+    blue: "#8c4b46"
+    magenta: "#7d534f"
+    cyan: "#9a413d"
+    white: "#c6c6c6"
+  bright:
+    black: "#5e5e5e"
+    red: "#ff8781"
+    green: "#ffa095"
+    yellow: "#ff948b"
+    blue: "#feb2aa"
+    magenta: "#ebbbb5"
+    cyan: "#ffaaa0"
+    white: "#ffffff"
+theme: Baskerville - Count Von Count
+
+font:
+  normal:
+    family: Hack nerd font
+    style: Regular
+
+  bold:
+    family: Hack nerd font
+    style: Bold
+
+  italic:
+    family: Hack nerd font
+    style: Italic
+
+  bold_italic:
+    family: Hack nerd font
+    style: Bold Italic
+  size: 18
+
