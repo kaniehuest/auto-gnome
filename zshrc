@@ -11,11 +11,15 @@ bindkey '^[[1;5C' emacs-forward-word
 bindkey '^[[1;5D' emacs-backward-word
 bindkey '\e[3~' delete-char
 
+
 autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
 # Aliases
+a='ls -la'
 alias spt='searchsploit'
+alias ls='lsd'
+alias $a='lsd -lah --group-dirs=first'
 
 ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE='fg=5'
 

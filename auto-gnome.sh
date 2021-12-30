@@ -68,7 +68,7 @@ function delete_packages(){
 
 function install_packages(){
 	echo "[+] Installing packages"
-	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip wget alacritty openvpn tree"
+	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip wget alacritty openvpn tree lsd"
 	sudo pacman -S $packages_to_install --noconfirm &>/dev/null
 }
 
