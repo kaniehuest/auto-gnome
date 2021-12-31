@@ -7,9 +7,15 @@ fi
 
 export TERM=xterm
 
-bindkey '^[[1;5C' emacs-forward-word
-bindkey '^[[1;5D' emacs-backward-word
+bindkey '^[[1;5C' forward-word
+bindkey '^[[1;5D' backward-word
 bindkey '\e[3~' delete-char
+bindkey '^[[3;3~' delete-char
+bindkey '^[[3;5~' delete-word
+bindkey '^[[1;3D' beginning-of-line
+bindkey '^[[1;3C' end-of-line
+bindkey '^[[H' beginning-of-line
+bindkey '^[[F' end-of-line
 
 
 autoload -Uz compinit && compinit

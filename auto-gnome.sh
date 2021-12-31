@@ -47,9 +47,6 @@ function install_tools(){
 	echo "[+] Installing Impacket"
 	cd /opt
 	sudo git clone https://github.com/SecureAuthCorp/impacket &>/dev/null
-	cd /opt/impacket
-	python3 -m pip install . &>/dev/null
-	sudo python3 -m pip install . &>/dev/null
 	
 	# smbmap
 	echo "[+] Installing Smbmap"
@@ -57,7 +54,6 @@ function install_tools(){
 	sudo git clone https://github.com/ShawnDEvans/smbmap.git &>/dev/null
 	cd /opt/smbmap
 	python3 -m pip install -r requirements.txt &>/dev/null
-	sudo python3 -m pip install -r requirements.txt &>/dev/null
 }
 
 function delete_packages(){
