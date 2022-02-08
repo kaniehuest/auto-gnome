@@ -30,33 +30,33 @@ items:
         white: "#f7f7f7"
   - theme: 3024.dark
 colors:
-  name: Count Von Count
-  author: Baskerville
+  name: Atelierdune (dark)
+  author: Chris Kempson
   primary:
-    background: "#000000"
-    foreground: "#919191"
+    background: "#20201d"
+    foreground: "#a6a28c"
   cursor:
-    text: "#000000"
-    cursor: "#919191"
+    text: "#20201d"
+    cursor: "#a6a28c"
   normal:
-    black: "#303030"
-    red: "#c10023"
-    green: "#a83334"
-    yellow: "#b51d2c"
-    blue: "#8c4b46"
-    magenta: "#7d534f"
-    cyan: "#9a413d"
-    white: "#c6c6c6"
+    black: "#20201d"
+    red: "#d73737"
+    green: "#60ac39"
+    yellow: "#cfb017"
+    blue: "#6684e1"
+    magenta: "#b854d4"
+    cyan: "#1fad83"
+    white: "#a6a28c"
   bright:
-    black: "#5e5e5e"
-    red: "#ff8781"
-    green: "#ffa095"
-    yellow: "#ff948b"
-    blue: "#feb2aa"
-    magenta: "#ebbbb5"
-    cyan: "#ffaaa0"
-    white: "#ffffff"
-theme: Baskerville - Count Von Count
+    black: "#7d7a68"
+    red: "#d73737"
+    green: "#60ac39"
+    yellow: "#cfb017"
+    blue: "#6684e1"
+    magenta: "#b854d4"
+    cyan: "#1fad83"
+    white: "#fefbec"
+theme: Atelierdune.dark
 
 font:
   normal:
@@ -75,4 +75,3 @@ font:
     family: Hack nerd font
     style: Bold Italic
   size: 18
-

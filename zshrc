@@ -5,6 +5,10 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
+# COMANDO PING
+# tcpdump -i tun0 icmp
+
+export PATH=$PATH:/home/lepra/.local/share/gem/ruby/3.0.0/bin:/home/lepra/.local/bin
 export TERM=xterm
 
 bindkey '^[[1;5C' forward-word
@@ -12,16 +16,18 @@ bindkey '^[[1;5D' backward-word
 bindkey '\e[3~' delete-char
 bindkey '^[[3;3~' delete-char
 bindkey '^[[3;5~' delete-word
-bindkey '^[[1;3D' beginning-of-line
-bindkey '^[[1;3C' end-of-line
-bindkey '^[[H' beginning-of-line
-bindkey '^[[F' end-of-line
+#bindkey '^[[1;3D' beginning-of-line
+#bindkey '^[[1;3C' end-of-line
+bindkey '^[[1~' beginning-of-line
+bindkey '^[[4~' end-of-line
 
 
 autoload -Uz compinit && compinit
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 
 # Aliases
+alias tmux="tmux -2"
+#alias tmux="TERM=screen-256color-bce tmux"
 a='ls -la'
 alias spt='searchsploit'
 alias ls='lsd'
@@ -35,7 +41,7 @@ PROMPT_EOL_MARK=""
 # Functions
 # Make working directories
 function mkt() {
-    mkdir enumeration extras scripts 
+    mkdir -p enumeration/nmap extras scripts  transfer
 }
 
 function PSCredential () {
