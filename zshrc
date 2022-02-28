@@ -5,9 +5,6 @@ if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# COMANDO PING
-# tcpdump -i tun0 icmp
-
 export PATH=$PATH:/home/lepra/.local/share/gem/ruby/3.0.0/bin:/home/lepra/.local/bin
 export TERM=xterm
 
@@ -52,6 +49,11 @@ function PSCredential () {
     echo -e "\t[+] Invoke-Command -ComputerName localhost -Credential \$cred -ScriptBlock { whoami }"
 }
 
+function HBIN() {
+    echo $1 > /home/lepra/.tmux/plugins/tmux-themepack/powerline/script/htb_box_ip.txt
+    echo $2 > /home/lepra/.tmux/plugins/tmux-themepack/powerline/script/htb_box_name.txt
+}
+
 # cd back any number of folders
 function cdb() {
     folderBack=""
@@ -67,16 +69,13 @@ function cdb() {
     fi
 }
 
-# Extract nmap information
 function extractPorts(){
-    ports="$(cat $1 | grep -oP '\d{1,5}/open' | awk '{print $1}' FS='/' | xargs | tr ' ' ',')"
-    ip_address="$(cat $1 | grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' | sort -u | head -n 1)"
-    echo -e "\n[*] Extracting information...\n" > extractPorts.tmp
-    echo -e "\t[*] IP Address: $ip_address"  >> extractPorts.tmp
-    echo -e "\t[*] Open ports: $ports\n"  >> extractPorts.tmp
-    echo $ports | tr -d '\n' | xclip -sel clip
-    echo -e "[*] Ports copied to clipboard\n"  >> extractPorts.tmp
-    cat extractPorts.tmp; rm extractPorts.tmp
+    ports=$(cat $1 | grep -oP '\d{1,5}/open' | awk '{print $1}' FS='/' | xargs | tr ' ' ',')
+    ip_address=$(cat $1 | grep -oP '\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}' | sort -u | head -n 1)
+    echo -e "[+] Puertos abiertos: $ports\n"
+    echo -e "[+] IP: $ip_address\n"
+    echo -e "[+] Ejecutando nmap...\n"
+    sudo nmap -p $ports -sCV $ip_address -v -oN infoPorts
 }
 
 source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
