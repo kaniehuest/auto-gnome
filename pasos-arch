@@ -3,46 +3,50 @@ paso2  -> loadkeys dvorak-la
 paso3  -> timedatectl set-timezone America/Santiago
 paso4  -> timedatectl set-ntp true
 paso5  -> fdisk -l
-paso6  -> fdisk /dev/sda
-paso7  -> Presionar "g" y crear 3 particiones:
-                +300M para particion UEFI -- Tipo de particion "1" UEFI
-                +6G para particion SWAP -- Tipo de particion "19" SWAP
-                El resto para linux -- Tipo de partición por defecto "linux filesystem" 
-paso8  -> mkfs.fat -F 32 /dev/sda1
-paso9  -> mkswap/dev/sda2
-paso10 -> mkfs.ext4 /dev/sda3
-paso11 -> mount /dev/sda3 /mnt
+paso6  -> fdisk /dev/sda # o /dev/nvme0n1
+paso7  -> Presionar "g" y crear 3 particiones con "n":
+          -> +2G para particion UEFI  -- Tipo de particion "1" UEFI
+          -> +6G para particion SWAP  -- Tipo de particion "19" SWAP
+          -> El resto para linux      -- Tipo de partición por defecto "linux filesystem" 
+paso8  -> mkfs.fat -F 32 /dev/sda1  # o /dev/nvme0n1p1
+paso9  -> mkswap/dev/sda2           # o /dev/nvme0n1p2
+paso10 -> mkfs.ext4 /dev/sda3       # o /dev/nvme0n1p3
+paso11 -> mount /dev/sda3 /mnt      # o /dev/nvme0n1p3
 paso12 -> mkdir /mnt/boot
-paso13 -> mount /dev/sda1 /mnt/boot
-paso14 -> swapon /dev/sda2
-paso15 -> pacstrap /mnt base linux linux-firmware networkmanager neovim git
+paso13 -> mount /dev/sda1 /mnt/boot # o /dev/nvme0n1p1
+paso14 -> swapon /dev/sda2          # o /dev/nvme0n1p2
+paso15 -> pacstrap /mnt base linux linux-firmware
 paso16 -> genfstab -U /mnt >> /mnt/etc/fstab
 paso17 -> arch-chroot /mnt
-paso18 -> ln -sf /usr/share/zoneinfo/America/Santiago /etc/localtime
-paso19 -> hwclock --systohc
-paso20 -> nvim /etc/locale.gen # Descomentar es_CL.UTF-8 y es_CL.ISO-8859-1
-paso21 -> locale-gen
-paso22 -> echo "LANG=es_CL.UTF-8" > /etc/locale.conf
-paso23 -> echo "KEYMAP=dvorak-la" > /etc/vconsole.conf
-paso24 -> echo "lepra" > /etc/hostname
-paso25 -> nvim /etc/hosts
-# Agregar esto:
-#   127.0.0.1   localhost
-#   ::1         localhost
-#   127.0.1.1   lepra
-paso26 -> useradd -m -g users -G wheel lepra
-paso27 -> passwd lepra
-paso28 -> pacman -S sudo
-paso29 -> nvim /etc/sudoers
-# Escribir ":show number" y descomentar la línea 82
-paso30 -> mkdir /boot/grub
-paso31 -> grub-mkconfig -o /boot/grub/grub.cfg
-paso32 -> pacman -S efibootmgr
+paso18 -> pacman -S neovim vim git networkmanager sudo grub efibootmgr
+paso19 -> ln -sf /usr/share/zoneinfo/America/Santiago /etc/localtime
+paso20 -> hwclock --systohc
+paso21 -> nvim /etc/locale.gen
+          -> :set number
+          -> 189-Enter
+          -> Descomentar es_CL.UTF-8
+paso22 -> locale-gen
+paso23 -> echo "LANG=es_CL.UTF-8" > /etc/locale.conf
+paso24 -> echo "KEYMAP=dvorak-la" > /etc/vconsole.conf
+paso25 -> echo "lepra" > /etc/hostname
+paso26 -> nvim /etc/hosts
+          -> Agregar esto:
+            127.0.0.1   localhost
+            ::1         localhost
+            127.0.1.1   lepra
+paso27 -> useradd -m -g users -G wheel lepra
+paso28 -> passwd lepra
+paso29 -> passwd
+paso30 -> nvim /etc/sudoers
+          -> ":81-Enter"
+          -> descomentar la línea
+paso31 -> mkdir /boot/grub
+paso32 -> grub-mkconfig -o /boot/grub/grub.cfg
 paso33 -> grub-install --target=x86_64-efi --efi-directory=/boot --bootloader-id=GRUB
 paso34 -> systemctl enable NetworkManager
-paso35 -> passwd
-paso36 -> exit
-paso37 -> reboot
-paso38 -> sudo pacman -S archlinux-keyring
-paso39 -> sudo pacman -S gnome
-paso40 -> sudo systemctl enable gdm
+paso35 -> exit
+paso36 -> reboot
+#######################################
+paso37 -> pacman -S archlinux-keyring gnome gtkmm open-vm-tools xf86-video-vmware xf86-mouse-vmmouse
+paso39 -> systemctl enable gdm
+paso40 -> systemctl enable vmtoolsd
