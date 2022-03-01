@@ -1,5 +1,79 @@
 #!/bin/bash
 
+function install_yay(){
+	echo "[+] Installing yay"
+	cd /opt
+	sudo git clone https://aur.archlinux.org/yay.git &>/dev/null
+	sudo chown -R $user:users /opt/yay
+	cd /opt/yay
+	makepkg -si --noconfirm &>/dev/null
+	echo "[+] Installing yay packages"
+	yay_packages="librewolf-bin 
+		brave-bin 
+		alacritty-themes"
+	yay -S $yay_packages --noconfirm &>/dev/null
+}
+
+function delete_packages(){
+	echo "[+] Deleting packages"
+	packages_to_delete="gnome-boxes 
+		gnome-books 
+		gnome-calculator
+		gnome-calendar 
+		gnome-maps 
+		gnome-music 
+		gnome-contacts 
+		gnome-weather 
+		cheese"
+	sudo pacman -R $packages_to_delete --noconfirm &>/dev/null
+}
+
+function install_packages(){
+	echo "[+] Installing packages"
+	packages_to_install="xclip
+		python
+		python-pip 
+		base-devel 
+		net-tools 
+		linux-headers
+		gtkmm3 
+		gnome-tweaks 
+		tmux
+		neofetch
+		cmatrix 
+		zsh
+		p7zip
+		wget 
+		alacritty 
+		openvpn
+		tree
+		lsd"
+	sudo pacman -S $packages_to_install --noconfirm &>/dev/null
+}
+
+function install_go(){
+	cd /home/$user/Descargas
+	wget https://go.dev/dl/go1.17.5.linux-amd64.tar.gz &>/dev/null
+	tar xvzf go1.17.5.linux-amd64.tar.gz &>/dev/null
+	sudo mv go /usr/local
+	export PATH=$PATH:/usr/local/go/bin
+	source $HOME/.bash_profile
+}
+
+function theme(){
+	echo "[+] Installing Orchis theme"
+	packages_theme="gtk-engine-murrine
+		gnome-themes-extra
+		gnome-themes-standard 
+		sassc"
+	mkdir /home/$user/github
+	cd /home/$user/github
+	git clone https://github.com/vinceliuice/Orchis-theme &>/dev/null
+	cd /home/$user/github/Orchis-theme
+	sudo pacman -S $packages_theme --noconfirm &>/dev/null
+	sh /home/$user/github/Orchis-theme/install.sh --tweaks solid &>/dev/null
+}
+
 function hack_font(){
 	# To test
 	mkdir /home/$1/hack-font
@@ -11,13 +85,12 @@ function hack_font(){
 	rm /home/$1/hack-font
 }
 
-function install_zsh(){
+function zsh_configuration(){
 	echo "[+] Configuring zsh"
 	yay -S --noconfirm zsh-theme-powerlevel10k-git &>/dev/null
-	echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >> /home/$1/.zshrc
-	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$1/.zsh/zsh-autosuggestions &>/dev/null
-	echo "source /home/$1/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> /home/$1/.zshrc
-	cp /usr/share/doc/alacritty/example/alacritty.yml ~/.alacritty.yml
+	echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >> /home/$user/.zshrc
+	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$user/.zsh/zsh-autosuggestions &>/dev/null
+	echo "source /home/$user/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> /home/$user/.zshrc
 }
 
 function install_tools(){
@@ -56,94 +129,19 @@ function install_tools(){
 	python3 -m pip install -r requirements.txt &>/dev/null
 }
 
-function delete_packages(){
-	echo "[+] Deleting packages"
-	packages_to_delete="gnome-boxes gnome-books gnome-calculator gnome-calendar gnome-maps gnome-music gnome-contacts gnome-weather cheese"
-	sudo pacman -R $packages_to_delete --noconfirm &>/dev/null
-}
-
-function install_packages(){
-	echo "[+] Installing packages"
-	packages_to_install="xclip base-devel net-tools linux-headers open-vm-tools gtkmm3 gnome-tweaks opendoas tmux neofetch python-pip nmap cmatrix zsh p7zip wget alacritty openvpn tree lsd"
-	sudo pacman -S $packages_to_install --noconfirm &>/dev/null
-}
-
-function dash_to_dock() {
-	echo "[+] Installing Dash to Dock"
-	mkdir /home/$1/dash-to-dock
-	cd /home/$1/dash-to-dock
-	wget https://extensions.gnome.org/extension-data/dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip &>/dev/null
-	mkdir -p /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com
-	7z x dash-to-dockmicxgx.gmail.com.v71.shell-extension.zip &>/dev/null
-	cp -r /home/$1/dash-to-dock/* /home/$1/.local/share/gnome-shell/extensions/dash-to-dock@micxgx.gmail.com &>/dev/null
-	rm -r /home/$1/dash-to-dock
-}
-
-function theme(){
-	mkdir /home/$1/github
-	cd /home/$1/github
-
-	echo "[+] Installing Orchis theme"
-	git clone https://github.com/vinceliuice/Orchis-theme &>/dev/null
-	cd /home/$1/github/Orchis-theme
-	sudo pacman -S gtk-engine-murrine gnome-themes-extra gnome-themes-standard sassc --noconfirm &>/dev/null
-	./install.sh --tweaks solid &>/dev/null
-
-	echo "[+] Installing Kora icons"
-	cd /home/$1/github
-	git clone https://github.com/bikass/kora.git &>/dev/null
-	cd /home/$1/github/kora
-	mkdir -p /home/$1/.local/share/icons
-	cp -r /home/$1/github/kora/kora* /home/$1/.local/share/icons
-}
-
-function conf_doas(){
-	echo "[+] Editing doas.conf"
-	sudo echo "permit :wheel" > /etc/doas.conf
-	sudo echo "permit :root" >> /etc/doas.conf
-	sudo chown -c root:root /etc/doas.conf &>/dev/null
-	sudo chmod -c 0400 /etc/doas.conf &>/dev/null
-}
-
-function install_go(){
-	mkdir /home/$1/temporal
-	cd /home/$1/temporal
-	wget https://go.dev/dl/go1.17.5.linux-amd64.tar.gz &>/dev/null
-	tar xvzf go1.17.5.linux-amd64.tar.gz &>/dev/null
-	sudo mv go /usr/local
-	export PATH=$PATH:/usr/local/go/bin
-	source $HOME/.bash_profile
-}
-
-function install_yay(){
-	echo "[+] Installing yay"
-	cd /opt
-	sudo git clone https://aur.archlinux.org/yay.git &>/dev/null
-	sudo chown -R $1:users /opt/yay
-	cd /opt/yay
-	makepkg -si --noconfirm &>/dev/null
-
-	echo "[+] Installing yay packages"
-	yay_packages="librewolf-bin brave-bin alacritty-themes"
-	yay -S $yay_packages --noconfirm &>/dev/null
-}
 
 if [ "$(echo $UID)" == "0" ]; then
 	echo "You must not run this script as root user"
 else
 	echo "Enter your username: "
 	read user
-
 	echo "[+] Updating packages..."
 	sudo pacman -Syu --noconfirm &>/dev/null
-
+	install_yay
 	delete_packages
 	install_packages
-	install_go $user
-	conf_doas
-	install_yay $user
-	theme $user
-	dash_to_dock $user
-	install_tools
-	install_zsh $user
+	install_go
+	theme 
+	zsh_configuration
+	#install_tools
 fi
