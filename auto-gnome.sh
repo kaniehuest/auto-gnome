@@ -83,7 +83,7 @@ zsh_configuration(){
 	cat ./zshrc > /home/$user/.zshrc
 	cat ./alacritty.yml > /home/$user/.alacritty.yml
 	cat ./init.vim > /home/$user/.config/nvim/init.vim
-	cat ./gray.tmuxtheme > 
+	cp ./lepra > /etc/cron.minutely
 }
 
 install_blackarch(){
@@ -175,6 +175,7 @@ tmux_configuration(){
 	git clone https://github.com/tmux-plugins/tpm /home/$user/.tmux/plugins/tpm &>/dev/null
 	cat ./tmux.conf > /home/$user/.tmux.conf
 	cat ./gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme
+	cp /.script_htb_vpn.sh > /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh
 	
 }
 
