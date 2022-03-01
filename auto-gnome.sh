@@ -1,21 +1,30 @@
 #!/bin/bash
 
-function install_yay(){
-	echo "[+] Installing yay"
+
+msg(){
+	echo "$(tput bold; tput setaf 2)[+] ${*}$(tput sgr0)"
+}
+
+err(){
+	echo "$(tput bold; tput setaf 1)[-] ERROR: ${*}$(tput sgr0)"
+}
+
+install_yay(){
+	msg "Installing yay"
 	cd /opt
 	sudo git clone https://aur.archlinux.org/yay.git &>/dev/null
 	sudo chown -R $user:users /opt/yay
 	cd /opt/yay
 	makepkg -si --noconfirm &>/dev/null
-	echo "[+] Installing yay packages"
+	msg "Installing yay packages"
 	yay_packages="librewolf-bin 
 		brave-bin 
 		alacritty-themes"
 	yay -S $yay_packages --noconfirm &>/dev/null
 }
 
-function delete_packages(){
-	echo "[+] Deleting packages"
+delete_packages(){
+	msg "Deleting packages"
 	packages_to_delete="gnome-boxes 
 		gnome-books 
 		gnome-calculator
@@ -28,30 +37,31 @@ function delete_packages(){
 	sudo pacman -R $packages_to_delete --noconfirm &>/dev/null
 }
 
-function install_packages(){
-	echo "[+] Installing packages"
-	packages_to_install="xclip
-		python
-		python-pip 
-		base-devel 
-		net-tools 
-		linux-headers
-		gtkmm3 
-		gnome-tweaks 
-		tmux
-		neofetch
-		cmatrix 
-		zsh
-		p7zip
-		wget 
-		alacritty 
-		openvpn
-		tree
-		lsd"
+install_packages(){
+	msg "Installing packages"
+	packages_to_install="base-devel
+		extra/xclip
+		community/alacritty
+		extra/htop
+		core/python
+		extra/python-pip
+		extra/python2
+		core/net-tools
+		core/linux-headers
+		extra/gtkmm3
+		community/tmux
+		community/neofetch
+		community/cmatrix
+		extra/zsh
+		extra/wget
+		extra/p7zip
+		extra/openvpn
+		community/lsd
+		extra/tree"
 	sudo pacman -S $packages_to_install --noconfirm &>/dev/null
 }
 
-function install_go(){
+install_go(){
 	cd /home/$user/Descargas
 	wget https://go.dev/dl/go1.17.5.linux-amd64.tar.gz &>/dev/null
 	tar xvzf go1.17.5.linux-amd64.tar.gz &>/dev/null
@@ -60,8 +70,8 @@ function install_go(){
 	source $HOME/.bash_profile
 }
 
-function theme(){
-	echo "[+] Installing Orchis theme"
+theme(){
+	msg "Installing Orchis theme"
 	packages_theme="gtk-engine-murrine
 		gnome-themes-extra
 		gnome-themes-standard 
@@ -74,7 +84,7 @@ function theme(){
 	sh /home/$user/github/Orchis-theme/install.sh --tweaks solid &>/dev/null
 }
 
-function hack_font(){
+hack_font(){
 	# To test
 	mkdir /home/$1/hack-font
 	cd /home/$1/hack-font
@@ -85,63 +95,90 @@ function hack_font(){
 	rm /home/$1/hack-font
 }
 
-function zsh_configuration(){
-	echo "[+] Configuring zsh"
+zsh_configuration(){
+	msg "Configuring zsh"
 	yay -S --noconfirm zsh-theme-powerlevel10k-git &>/dev/null
 	echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >> /home/$user/.zshrc
 	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$user/.zsh/zsh-autosuggestions &>/dev/null
 	echo "source /home/$user/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> /home/$user/.zshrc
 }
 
-function install_blackarch(){
+install_blackarch(){
+	msg "Installing blackArch"
 	cd /home/$user/Descargas
 	curl -O https://blackarch.org/strap.sh
 	sudo sh strap.sh
+	sudo pacman -Syy
+	sudo pacman -Syu
 }
 
-function install_tools(){
-	echo "[+] PortSwigger https://portswigger.net/burp/communitydownload"
-	echo "[+] Installing tools"
-	cd /opt
-	sudo git clone https://github.com/danielmiessler/SecLists &>/dev/null
-	sudo git clone https://github.com/carlospolop/PEASS-ng &>/dev/null
-	sudo git clone https://gitlab.com/kalilinux/packages/windows-binaries &>/dev/null
-	sudo git clone https://github.com/samratashok/nishang.git &>/dev/null
-	sudo git clone https://github.com/sqlmapproject/sqlmap.git &>/dev/null
+install_tools(){
+	msg "Installing tools"
 
-	# Juicy Potato
-	echo "[+] Installing Juicy Potato"
-	sudo mkdir /opt/Juicy-Potato
-	cd /opt/Juicy-Potato
-	sudo wget https://github.com/ohpe/juicy-potato/releases/download/v0.1/JuicyPotato.exe &>/dev/null
+	python3 -m pip install impacket
+	tools_packages="blackarch/nishang
+	core/perl
+	extra/php
+	extra/ruby
+	extra/java-runtime-common
+	extra/java-environment-common
+	extra/mariadb
+	extra/postgresql
+	blackarch/metasploit
+	blackarch/sqlmap
+	blackarch/windows-binaries
+	community/dos2unix
+	blackarch/binwalk
+	community/rlwrap
+	community/remmina
+	blackarch/radare2
+	blackarch/evil-winrm
+	blackarch/peass
+	blackarch/seclists
+	blackarch/juicy-potato
+	blackarch/impacket
+	blackarch/smbmap
+	blackarch/john
+	blackarch/hashcat
+	blackarch/hashcat-utils
+	blackarch/cewl
+	blackarch/chisel
+	blackarch/responder
+	blackarch/sherlock
+	blackarch/socat
+	blackarch/wireshark-qt
+	blackarch/wireshark-cli
+	blackarch/whatweb
+	blackarch/nikto
+	blackarch/burpsuite
+	blackarch/wfuzz
+	blackarch/gobuster
+	blackarch/tcpdump
+	blackarch/steghide
+	extra/nmap
+	blackarch/ysoserial"
+	sudo pacman -Syu
+
+	echo "[+] PortSwigger https://portswigger.net/burp/communitydownload"
 
 	# Monkey PHP
-	echo "[+] Installing Monkey PHP Shell"
 	cd /opt
 	sudo mkdir /opt/monkey-php-shell
 	cd /opt/monkey-php-shell
 	sudo wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php &>/dev/null
-
-	# Impacket
-	echo "[+] Installing Impacket"
-	cd /opt
-	sudo git clone https://github.com/SecureAuthCorp/impacket &>/dev/null
-	
-	# smbmap
-	echo "[+] Installing Smbmap"
-	cd /opt
-	sudo git clone https://github.com/ShawnDEvans/smbmap.git &>/dev/null
-	cd /opt/smbmap
-	python3 -m pip install -r requirements.txt &>/dev/null
 }
 
+check_priv(){
+	if [ "$(id -u)" -e 0]; then
+		err "You must not run this script as root user"
+	fi
+}
 
-if [ "$(echo $UID)" == "0" ]; then
-	echo "You must not run this script as root user"
-else
-	echo "Enter your username: "
+gnome_setup(){
+	check_priv
+	msg "Enter your username: "
 	read user
-	echo "[+] Updating packages..."
+	msg "Updating packages"
 	sudo pacman -Syu --noconfirm &>/dev/null
 	install_yay
 	delete_packages
@@ -151,4 +188,6 @@ else
 	zsh_configuration
 	install_blackarch
 	#install_tools
-fi
+}
+
+gnome_setup
