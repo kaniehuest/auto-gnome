@@ -93,6 +93,12 @@ function zsh_configuration(){
 	echo "source /home/$user/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> /home/$user/.zshrc
 }
 
+function install_blackarch(){
+	cd /home/$user/Descargas
+	curl -O https://blackarch.org/strap.sh
+	sudo sh strap.sh
+}
+
 function install_tools(){
 	echo "[+] PortSwigger https://portswigger.net/burp/communitydownload"
 	echo "[+] Installing tools"
@@ -143,5 +149,6 @@ else
 	install_go
 	theme 
 	zsh_configuration
+	install_blackarch
 	#install_tools
 fi
