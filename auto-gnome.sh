@@ -6,7 +6,7 @@ msg(){
 }
 
 err(){
-	echo "$(tput bold; tput setaf 1)[-] ERROR: ${*}$(tput sgr0)"
+	echo "$(tput bold; tput setaf 1)[!] ERROR: ${*}$(tput sgr0)"
 }
 
 install_yay(){
@@ -106,16 +106,13 @@ zsh_configuration(){
 install_blackarch(){
 	msg "Installing blackArch"
 	cd /home/$user/Descargas
-	curl -O https://blackarch.org/strap.sh
+	curl -O https://blackarch.org/strap.sh &>/dev/null
 	sudo sh strap.sh
-	sudo pacman -Syy
-	sudo pacman -Syu
+	sudo pacman -Syy &>/dev/null
+	sudo pacman -Syu --noconfirm &>/dev/null
 }
 
 install_tools(){
-	msg "Installing tools"
-
-	python3 -m pip install impacket
 	tools_packages="blackarch/nishang
 	core/perl
 	extra/php
@@ -157,9 +154,12 @@ install_tools(){
 	blackarch/steghide
 	extra/nmap
 	blackarch/ysoserial"
-	sudo pacman -Syu
+	msg "Installing tools"
+	python3 -m pip install impacket
+	sudo pacman -Syu --noconfirm &>/dev/null
+	sudo pacman -S $tools_packages --noconfirm &>/dev/null
 
-	echo "[+] PortSwigger https://portswigger.net/burp/communitydownload"
+	msg "PortSwigger https://portswigger.net/burp/communitydownload"
 
 	# Monkey PHP
 	cd /opt
@@ -169,7 +169,7 @@ install_tools(){
 }
 
 check_priv(){
-	if [ "$(id -u)" -e 0]; then
+	if [ "$(id -u)" == 0 ]; then
 		err "You must not run this script as root user"
 	fi
 }
@@ -187,7 +187,7 @@ gnome_setup(){
 	theme 
 	zsh_configuration
 	install_blackarch
-	#install_tools
+	install_tools
 }
 
 gnome_setup
