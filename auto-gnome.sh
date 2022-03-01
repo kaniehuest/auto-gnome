@@ -37,32 +37,9 @@ delete_packages(){
 	sudo pacman -R $packages_to_delete --noconfirm &>/dev/null
 }
 
-install_packages(){
-	msg "Installing packages"
-	packages_to_install="base-devel
-		extra/xclip
-		community/alacritty
-		extra/htop
-		core/python
-		extra/python-pip
-		extra/python2
-		core/net-tools
-		core/linux-headers
-		extra/gtkmm3
-		community/tmux
-		community/neofetch
-		community/cmatrix
-		extra/zsh
-		extra/wget
-		extra/p7zip
-		extra/openvpn
-		community/lsd
-		extra/tree"
-	sudo pacman -S $packages_to_install --noconfirm &>/dev/null
-}
-
 install_go(){
 	cd /home/$user/Descargas
+	sudo pacman -S extra/wget --noconfirm &>/dev/null
 	wget https://go.dev/dl/go1.17.5.linux-amd64.tar.gz &>/dev/null
 	tar xvzf go1.17.5.linux-amd64.tar.gz &>/dev/null
 	sudo mv go /usr/local
@@ -98,9 +75,10 @@ hack_font(){
 zsh_configuration(){
 	msg "Configuring zsh"
 	yay -S --noconfirm zsh-theme-powerlevel10k-git &>/dev/null
-	echo 'source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme' >> /home/$user/.zshrc
 	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$user/.zsh/zsh-autosuggestions &>/dev/null
-	echo "source /home/$user/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh" >> /home/$user/.zshrc
+	cat ./zshrc > /home/$user/.zshrc
+	cat ./alacritty.yml > /home/$user/.alacritty.yml
+	cat ./init.vim > /home/$user/.config/nvim/init.vim
 }
 
 install_blackarch(){
@@ -113,51 +91,69 @@ install_blackarch(){
 }
 
 install_tools(){
-	tools_packages="blackarch/nishang
-	core/perl
-	extra/php
-	extra/ruby
-	extra/java-runtime-common
-	extra/java-environment-common
-	extra/mariadb
-	extra/postgresql
-	blackarch/metasploit
-	blackarch/sqlmap
-	blackarch/windows-binaries
-	community/dos2unix
-	blackarch/binwalk
-	community/rlwrap
-	community/remmina
-	blackarch/radare2
-	blackarch/evil-winrm
-	blackarch/peass
-	blackarch/seclists
-	blackarch/juicy-potato
-	blackarch/impacket
-	blackarch/smbmap
-	blackarch/john
-	blackarch/hashcat
-	blackarch/hashcat-utils
-	blackarch/cewl
-	blackarch/chisel
-	blackarch/responder
-	blackarch/sherlock
-	blackarch/socat
-	blackarch/wireshark-qt
-	blackarch/wireshark-cli
-	blackarch/whatweb
-	blackarch/nikto
-	blackarch/burpsuite
-	blackarch/wfuzz
-	blackarch/gobuster
-	blackarch/tcpdump
-	blackarch/steghide
-	extra/nmap
-	blackarch/ysoserial"
+	packages="base-devel
+		core/net-tools
+		core/linux-headers
+		core/perl
+		core/cronie
+		core/python
+		extra/xclip
+		extra/htop
+		extra/python-pip
+		extra/python2
+		extra/gtkmm3
+		extra/zsh
+		extra/p7zip
+		extra/openvpn
+		extra/nmap
+		extra/tree
+		extra/php
+		extra/ruby
+		extra/java-runtime-common
+		extra/java-environment-common
+		extra/mariadb
+		extra/postgresql
+		community/tmux
+		community/neofetch
+		community/alacritty
+		community/cmatrix
+		community/lsd
+		community/dos2unix
+		community/rlwrap
+		community/remmina
+		blackarch/nishang
+		blackarch/metasploit
+		blackarch/sqlmap
+		blackarch/windows-binaries
+		blackarch/binwalk
+		blackarch/radare2
+		blackarch/evil-winrm
+		blackarch/peass
+		blackarch/seclists
+		blackarch/juicy-potato
+		blackarch/impacket
+		blackarch/smbmap
+		blackarch/john
+		blackarch/hashcat
+		blackarch/hashcat-utils
+		blackarch/cewl
+		blackarch/chisel
+		blackarch/responder
+		blackarch/sherlock
+		blackarch/socat
+		blackarch/wireshark-qt
+		blackarch/wireshark-cli
+		blackarch/whatweb
+		blackarch/nikto
+		blackarch/burpsuite
+		blackarch/wfuzz
+		blackarch/gobuster
+		blackarch/tcpdump
+		blackarch/steghide
+		blackarch/ysoserial"
 	msg "Installing tools"
+	sudo pacman -S $packages --noconfirm
 	sudo pacman -Syu --noconfirm 
-	sudo pacman -S $tools_packages --noconfirm
-
 	msg "PortSwigger https://portswigger.net/burp/communitydownload"
 
 	# Monkey PHP
@@ -167,26 +163,32 @@ install_tools(){
 	sudo wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php &>/dev/null
 }
 
+tmux_configuration(){
+	msg "Configuring tmux"
+	git clone https://github.com/tmux-plugins/tpm /home/$user/.tmux/plugins/tpm &>/dev/null
+	cat ./tmux.conf > /home/$user/.tmux.conf
+}
+
 check_priv(){
 	if [ "$(id -u)" == 0 ]; then
 		err "You must not run this script as root user"
+	else
+		user=$(whoami)
 	fi
 }
 
 gnome_setup(){
 	check_priv
-	msg "Enter your username: "
-	read user
 	msg "Updating packages"
 	sudo pacman -Syu --noconfirm &>/dev/null
 	install_yay
 	delete_packages
-	install_packages
 	install_go
 	theme 
 	zsh_configuration
 	install_blackarch
 	install_tools
+	tmux_configuration
 }
 
 gnome_setup
