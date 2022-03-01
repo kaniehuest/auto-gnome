@@ -11,11 +11,12 @@ err(){
 
 install_yay(){
 	msg "Installing yay"
-	cd /opt
+	pushd /opt
 	sudo git clone https://aur.archlinux.org/yay.git &>/dev/null
 	sudo chown -R $user:users /opt/yay
 	cd /opt/yay
 	makepkg -si --noconfirm &>/dev/null
+	popd
 	msg "Installing yay packages"
 	yay_packages="librewolf-bin 
 		brave-bin 
@@ -38,11 +39,12 @@ delete_packages(){
 }
 
 install_go(){
-	cd /home/$user/Descargas
+	pushd /home/$user/Descargas
 	sudo pacman -S extra/wget --noconfirm &>/dev/null
 	wget https://go.dev/dl/go1.17.5.linux-amd64.tar.gz &>/dev/null
 	tar xvzf go1.17.5.linux-amd64.tar.gz &>/dev/null
 	sudo mv go /usr/local
+	popd
 	export PATH=$PATH:/usr/local/go/bin
 	source $HOME/.bash_profile
 }
@@ -54,22 +56,24 @@ theme(){
 		gnome-themes-standard 
 		sassc"
 	mkdir /home/$user/github
-	cd /home/$user/github
+	pushd /home/$user/github
 	git clone https://github.com/vinceliuice/Orchis-theme &>/dev/null
 	cd /home/$user/github/Orchis-theme
 	sudo pacman -S $packages_theme --noconfirm &>/dev/null
 	sh /home/$user/github/Orchis-theme/install.sh --tweaks solid &>/dev/null
+	popd
 }
 
 hack_font(){
 	# To test
 	mkdir /home/$1/hack-font
-	cd /home/$1/hack-font
+	pushd /home/$1/hack-font
 	wget https://github.com/ryanoasis/nerd-fonts/releases/download/v2.1.0/Hack.zip
 	7z x Hack.zip
 	sudo mkdir -p /usr/share/fonts/hack
 	cp ./*ttf /usr/share/fonts/hack
 	rm /home/$1/hack-font
+	popd
 }
 
 zsh_configuration(){
@@ -79,13 +83,15 @@ zsh_configuration(){
 	cat ./zshrc > /home/$user/.zshrc
 	cat ./alacritty.yml > /home/$user/.alacritty.yml
 	cat ./init.vim > /home/$user/.config/nvim/init.vim
+	cat ./gray.tmuxtheme > 
 }
 
 install_blackarch(){
 	msg "Installing blackArch"
-	cd /home/$user/Descargas
+	pushd /home/$user/Descargas
 	curl -O https://blackarch.org/strap.sh &>/dev/null
 	sudo sh strap.sh &>/dev/null
+	popd
 	sudo pacman -Syy &>/dev/null
 	sudo pacman -Syu --noconfirm &>/dev/null
 }
@@ -157,16 +163,19 @@ install_tools(){
 	msg "PortSwigger https://portswigger.net/burp/communitydownload"
 
 	# Monkey PHP
-	cd /opt
+	pushd /opt
 	sudo mkdir /opt/monkey-php-shell
 	cd /opt/monkey-php-shell
 	sudo wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php &>/dev/null
+	popd
 }
 
 tmux_configuration(){
 	msg "Configuring tmux"
 	git clone https://github.com/tmux-plugins/tpm /home/$user/.tmux/plugins/tpm &>/dev/null
 	cat ./tmux.conf > /home/$user/.tmux.conf
+	cat ./gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme
+	
 }
 
 check_priv(){
@@ -189,6 +198,7 @@ gnome_setup(){
 	install_blackarch
 	install_tools
 	tmux_configuration
+
 }
 
 gnome_setup
