@@ -107,7 +107,7 @@ install_blackarch(){
 	msg "Installing blackArch"
 	cd /home/$user/Descargas
 	curl -O https://blackarch.org/strap.sh &>/dev/null
-	sudo sh strap.sh
+	sudo sh strap.sh &>/dev/null
 	sudo pacman -Syy &>/dev/null
 	sudo pacman -Syu --noconfirm &>/dev/null
 }
@@ -155,9 +155,9 @@ install_tools(){
 	extra/nmap
 	blackarch/ysoserial"
 	msg "Installing tools"
-	python3 -m pip install impacket
-	sudo pacman -Syu --noconfirm &>/dev/null
-	sudo pacman -S $tools_packages --noconfirm &>/dev/null
+	python3 -m pip install impacket &>/dev/null
+	sudo pacman -Syu --noconfirm 
+	sudo pacman -S $tools_packages --noconfirm
 
 	msg "PortSwigger https://portswigger.net/burp/communitydownload"
 
