@@ -155,7 +155,6 @@ install_tools(){
 	extra/nmap
 	blackarch/ysoserial"
 	msg "Installing tools"
-	python3 -m pip install impacket &>/dev/null
 	sudo pacman -Syu --noconfirm 
 	sudo pacman -S $tools_packages --noconfirm
 
