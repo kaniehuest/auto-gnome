@@ -16,7 +16,7 @@ install_yay(){
 	sudo chown -R $user:users /opt/yay
 	cd /opt/yay
 	makepkg -si --noconfirm &>/dev/null
-	popd
+	popd &>/dev/null
 	msg "Installing yay packages"
 	yay_packages="librewolf-bin 
 		brave-bin 
@@ -51,7 +51,7 @@ theme(){
 	cd /home/$user/github/Orchis-theme
 	sudo pacman -S $packages_theme --noconfirm &>/dev/null
 	sh /home/$user/github/Orchis-theme/install.sh --tweaks solid &>/dev/null
-	popd
+	popd &>/dev/null
 }
 
 hack_font(){
@@ -63,7 +63,7 @@ hack_font(){
 	sudo mkdir -p /usr/share/fonts/hack
 	cp ./*ttf /usr/share/fonts/hack
 	rm /home/$1/hack-font
-	popd
+	popd &>/dev/null
 }
 
 zsh_configuration(){
@@ -83,7 +83,7 @@ install_blackarch(){
 	pushd /home/$user/Descargas
 	curl -O https://blackarch.org/strap.sh &>/dev/null
 	sudo sh strap.sh &>/dev/null
-	popd
+	popd &>/dev/null
 	sudo pacman -Syu --noconfirm &>/dev/null
 }
 
@@ -149,15 +149,15 @@ install_tools(){
 		blackarch/steghide
 		blackarch/ysoserial"
 	msg "Installing tools"
-	sudo pacman -S $packages --noconfirm
-	sudo pacman -Syu --noconfirm 
+	sudo pacman -S $packages --noconfirm &>/dev/null
+	sudo pacman -Syu --noconfirm  &>/dev/null
 	msg "PortSwigger https://portswigger.net/burp/communitydownload"
 
 	# Monkey PHP
 	sudo mkdir /opt/monkey-php-shell
 	pushd /opt/monkey-php-shell
 	sudo wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php &>/dev/null
-	popd
+	popd &>/dev/null
 }
 
 tmux_configuration(){
@@ -166,7 +166,6 @@ tmux_configuration(){
 	cat $directory/tmux.conf > /home/$user/.tmux.conf
 	#cat $directory/gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme
 	#cp $directory/script_htb_vpn.sh > /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh
-	
 }
 
 check_priv(){
