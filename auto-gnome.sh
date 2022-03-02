@@ -14,7 +14,7 @@ warn(){
 
 banner(){
 	tput bold; tput setaf 1
-    cat << EOF
+    	cat << EOF
      _______  __   __  _______  _______         _______  __    _  _______  __   __  _______ 
     |   _   ||  | |  ||       ||       |       |       ||  |  | ||       ||  |_|  ||       |
     |  |_|  ||  | |  ||_     _||   _   | ____  |    ___||   |_| ||   _   ||       ||    ___|
@@ -24,15 +24,13 @@ banner(){
     |__| |__||_______|  |___|  |_______|       |_______||_|  |__||_______||_|   |_||_______|
     :)
 EOF
-    tput sgr0
+    	tput sgr0
 }
 
 tmux_configuration(){
 	msg "Configuring tmux"
 	git clone https://github.com/tmux-plugins/tpm /home/$user/.tmux/plugins/tpm &>/dev/null
 	cat $directory/tmux.conf > /home/$user/.tmux.conf
-	#cat $directory/gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme
-	#cp $directory/script_htb_vpn.sh > /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh
 }
 
 zsh_configuration(){
@@ -62,9 +60,9 @@ install_yay(){
 
 install_tools(){
 	packages="base-devel
-        core/man-db
+		core/man-db
 		core/man-pages
-        core/net-tools
+		core/net-tools
 		core/linux-headers
 		core/perl
 		core/cronie
@@ -126,7 +124,6 @@ install_tools(){
 	msg "Installing tools"
 	sudo pacman -S $packages --noconfirm &>/dev/null
 	sudo pacman -Syu --noconfirm  &>/dev/null
-	msg "PortSwigger https://portswigger.net/burp/communitydownload"
 
 	# Monkey PHP
 	sudo mkdir /opt/monkey-php-shell
@@ -176,11 +173,13 @@ delete_packages(){
 check_priv(){
 	if [ "$(id -u)" == 0 ]; then
 		err "You must not run this script as root user"
+		tput cnorm
 	fi
 }
 
 gnome_setup(){
-    banner
+	tput civis
+    	banner
 	check_priv
 	user=$(whoami)
 	directory=$(pwd)
@@ -193,14 +192,15 @@ gnome_setup(){
 	install_yay
 	zsh_configuration
 	tmux_configuration
-    sudo usermod -s /usr/bin/zsh lepra
+    	sudo usermod -s /usr/bin/zsh lepra
 	warn "\n\t\t[!] START TMUX AND PRESS \"PREFIX + I\"  [!]"
 	warn "\t\t[!] AND EXECUTE THE FOLLOWING COMMANDS [!]\n"
 	warn "cat $directory/gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme\n"
 	warn "mkdir /home/$user/.tmux/plugins/tmux-themepack/powerline/script/\n"
-    warn "cp $directory/script_htb_vpn.sh /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh\n"
-    warn "\n\t\t[!] WRITE THE FOLLOWING IN \"/etc/cron.d\" [!]\n"
-    warn "* * * * * /usr/bin/bash /home/lepra/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
+    	warn "cp $directory/script_htb_vpn.sh /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh\n"
+    	warn "\n\t\t[!] WRITE THE FOLLOWING IN \"/etc/cron.d\" [!]\n"
+    	warn "* * * * * /usr/bin/bash /home/lepra/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
+	tput cnorm
 }
 
 gnome_setup
