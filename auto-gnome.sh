@@ -74,8 +74,6 @@ zsh_configuration(){
 	cat $directory/alacritty.yml > /home/$user/.alacritty.yml
 	mkdir -p /home/$user/.config/nvim
 	cat $directory/init.vim > /home/$user/.config/nvim/init.vim
-	sudo mkdir /etc/cron.minutely
-	sudo cp $directory/lepra > /etc/cron.minutely/lepra
 }
 
 install_blackarch(){
