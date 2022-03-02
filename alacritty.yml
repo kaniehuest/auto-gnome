@@ -60,18 +60,5 @@ theme: Atelierdune.dark
 
 font:
   normal:
-    family: Hack nerd font
-    style: Regular
-
-  bold:
-    family: Hack nerd font
-    style: Bold
-
-  italic:
-    family: Hack nerd font
-    style: Italic
-
-  bold_italic:
-    family: Hack nerd font
-    style: Bold Italic
+    family: MesloLGS NF
   size: 18

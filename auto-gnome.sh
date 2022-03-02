@@ -185,6 +185,7 @@ gnome_setup(){
 	install_yay
 	zsh_configuration
 	tmux_configuration
+    sudo usermod -s /usr/bin/zsh lepra
 }
 
 gnome_setup
