@@ -20,6 +20,7 @@ install_yay(){
 	msg "Installing yay packages"
 	yay_packages="librewolf-bin 
 		brave-bin 
+		zsh-theme-powerlevel10k-git
 		alacritty-themes"
 	yay -S $yay_packages --noconfirm &>/dev/null
 }
@@ -68,7 +69,6 @@ hack_font(){
 
 zsh_configuration(){
 	msg "Configuring zsh"
-	yay -S --noconfirm zsh-theme-powerlevel10k-git &>/dev/null
 	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$user/.zsh/zsh-autosuggestions &>/dev/null
 	cat $directory/zshrc > /home/$user/.zshrc
 	cat $directory/alacritty.yml > /home/$user/.alacritty.yml
@@ -178,12 +178,12 @@ gnome_setup(){
 	directory=$(pwd)
 	msg "Updating packages"
 	sudo pacman -Syu --noconfirm &>/dev/null
-	install_yay
 	delete_packages
 	theme 
-	zsh_configuration
 	install_blackarch
 	install_tools
+	install_yay
+	zsh_configuration
 	tmux_configuration
 }
 
