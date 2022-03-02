@@ -38,16 +38,6 @@ delete_packages(){
 	sudo pacman -R $packages_to_delete --noconfirm &>/dev/null
 }
 
-install_go(){
-	pushd /home/$user/Descargas
-	sudo pacman -S extra/wget --noconfirm &>/dev/null
-	wget https://go.dev/dl/go1.17.5.linux-amd64.tar.gz &>/dev/null
-	tar xvzf go1.17.5.linux-amd64.tar.gz &>/dev/null
-	sudo mv go /usr/local
-	popd
-	export PATH=$PATH:/usr/local/go/bin
-	source $HOME/.bash_profile
-}
 
 theme(){
 	msg "Installing Orchis theme"
@@ -80,10 +70,12 @@ zsh_configuration(){
 	msg "Configuring zsh"
 	yay -S --noconfirm zsh-theme-powerlevel10k-git &>/dev/null
 	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$user/.zsh/zsh-autosuggestions &>/dev/null
-	cat ./zshrc > /home/$user/.zshrc
-	cat ./alacritty.yml > /home/$user/.alacritty.yml
-	cat ./init.vim > /home/$user/.config/nvim/init.vim
-	cp ./lepra > /etc/cron.minutely
+	cat $directory/zshrc > /home/$user/.zshrc
+	cat $directory/alacritty.yml > /home/$user/.alacritty.yml
+	mkdir -p /home/$user/.config/nvim
+	cat $directory/init.vim > /home/$user/.config/nvim/init.vim
+	sudo mkdir /etc/cron.minutely
+	sudo cp $directory/lepra > /etc/cron.minutely
 }
 
 install_blackarch(){
@@ -92,7 +84,6 @@ install_blackarch(){
 	curl -O https://blackarch.org/strap.sh &>/dev/null
 	sudo sh strap.sh &>/dev/null
 	popd
-	sudo pacman -Syy &>/dev/null
 	sudo pacman -Syu --noconfirm &>/dev/null
 }
 
@@ -163,9 +154,8 @@ install_tools(){
 	msg "PortSwigger https://portswigger.net/burp/communitydownload"
 
 	# Monkey PHP
-	pushd /opt
 	sudo mkdir /opt/monkey-php-shell
-	cd /opt/monkey-php-shell
+	pushd /opt/monkey-php-shell
 	sudo wget https://raw.githubusercontent.com/pentestmonkey/php-reverse-shell/master/php-reverse-shell.php &>/dev/null
 	popd
 }
@@ -173,33 +163,31 @@ install_tools(){
 tmux_configuration(){
 	msg "Configuring tmux"
 	git clone https://github.com/tmux-plugins/tpm /home/$user/.tmux/plugins/tpm &>/dev/null
-	cat ./tmux.conf > /home/$user/.tmux.conf
-	cat ./gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme
-	cp /.script_htb_vpn.sh > /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh
+	cat $directory/tmux.conf > /home/$user/.tmux.conf
+	#cat $directory/gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme
+	#cp $directory/script_htb_vpn.sh > /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh
 	
 }
 
 check_priv(){
 	if [ "$(id -u)" == 0 ]; then
 		err "You must not run this script as root user"
-	else
-		user=$(whoami)
 	fi
 }
 
 gnome_setup(){
 	check_priv
+	user=$(whoami)
+	directory=$(pwd)
 	msg "Updating packages"
 	sudo pacman -Syu --noconfirm &>/dev/null
 	install_yay
 	delete_packages
-	install_go
 	theme 
 	zsh_configuration
 	install_blackarch
 	install_tools
 	tmux_configuration
-
 }
 
 gnome_setup
