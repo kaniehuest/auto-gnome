@@ -44,6 +44,7 @@ zsh_configuration(){
 
 install_yay(){
 	msg "Installing yay"
+	sudo pacman -S base-devel
 	pushd /opt &>/dev/null
 	sudo git clone https://aur.archlinux.org/yay.git &>/dev/null
 	sudo chown -R $user:users /opt/yay
@@ -59,8 +60,7 @@ install_yay(){
 }
 
 install_tools(){
-	packages="base-devel
-		core/man-db
+	packages="core/man-db
 		core/man-pages
 		core/net-tools
 		core/linux-headers
