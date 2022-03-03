@@ -44,7 +44,7 @@ zsh_configuration(){
 
 install_yay(){
 	msg "Installing yay"
-	sudo pacman -S base-devel
+	sudo pacman -S base-devel --noconfirm &>/dev/null
 	pushd /opt &>/dev/null
 	sudo git clone https://aur.archlinux.org/yay.git &>/dev/null
 	sudo chown -R $user:users /opt/yay
