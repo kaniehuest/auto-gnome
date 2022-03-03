@@ -188,8 +188,8 @@ gnome_setup(){
 	delete_packages
 	theme 
 	install_blackarch
-	install_tools
 	install_yay
+	install_tools
 	zsh_configuration
 	tmux_configuration
     	sudo usermod -s /usr/bin/zsh lepra
