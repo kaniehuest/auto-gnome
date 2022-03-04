@@ -5,7 +5,7 @@ msg(){
 }
 
 err(){
-	echo "$(tput bold; tput setaf 1)[!] ERROR: ${*}$(tput sgr0)"
+	echo -e "$(tput bold; tput setaf 1)${*}$(tput sgr0)"
 }
 
 warn(){
@@ -123,7 +123,7 @@ install_tools(){
 		blackarch/ysoserial"
 	msg "Installing tools"
 	sudo pacman -S $packages --noconfirm &>/dev/null
-	sudo pacman -Syu --noconfirm  &>/dev/null
+	sudo pacman -Syu --noconfirm &>/dev/null
 
 	# Monkey PHP
 	sudo mkdir /opt/monkey-php-shell
@@ -179,7 +179,7 @@ check_priv(){
 
 gnome_setup(){
 	tput civis
-    	banner
+    banner
 	check_priv
 	user=$(whoami)
 	directory=$(pwd)
@@ -192,15 +192,19 @@ gnome_setup(){
 	install_tools
 	zsh_configuration
 	tmux_configuration
-    	sudo usermod -s /usr/bin/zsh lepra
-	warn "\n\t\t[!] START TMUX AND PRESS \"PREFIX + I\"  [!]"
-	warn "\t\t[!] AND EXECUTE THE FOLLOWING COMMANDS [!]\n"
+    sudo usermod -s /usr/bin/zsh lepra
+	err "\n\t\t[!] START TMUX AND PRESS \"PREFIX + I\"   [!]"
+	err "\t\t[!] THEN EXECUTE THE FOLLOWING COMMANDS [!]"
+    warn "--------------------------------------------------------------------------------------------"
 	warn "cat $directory/gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme\n"
 	warn "mkdir /home/$user/.tmux/plugins/tmux-themepack/powerline/script/\n"
-    	warn "cp $directory/script_htb_vpn.sh /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh\n"
-    	warn "\n\t\t[!] WRITE THE FOLLOWING IN \"/etc/cron.d\" [!]\n"
-    	warn "* * * * * /usr/bin/bash /home/lepra/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
+   	warn "cp $directory/script_htb_vpn.sh /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
+    warn "--------------------------------------------------------------------------------------------"
+   	err "\n\t\t[!] WRITE THE FOLLOWING IN \"/etc/cron.d\" [!]"
+    warn "---------------------------------------------------------------------------------------------------"
+   	warn "* * * * * /usr/bin/bash /home/lepra/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
+    warn "---------------------------------------------------------------------------------------------------"
+    err "\n\t\t[!] GO TO \"FONTS\" FOLDER AND INSTALL THE FONTS [!]"
 	tput cnorm
 }
-
 gnome_setup
