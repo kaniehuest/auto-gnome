@@ -55,6 +55,8 @@ install_yay(){
 	yay_packages="librewolf-bin 
 		brave-bin 
 		zsh-theme-powerlevel10k-git
+        aur/sqsh
+        aur/exploit-db-git
 		alacritty-themes"
 	yay -S $yay_packages --noconfirm &>/dev/null
 }
@@ -62,11 +64,13 @@ install_yay(){
 install_tools(){
 	packages="core/man-db
 		core/man-pages
+        core/mlocate
 		core/net-tools
 		core/linux-headers
 		core/perl
 		core/cronie
 		core/python
+        core/nfs-utils
 		extra/xclip
 		extra/htop
 		extra/python-pip
@@ -200,7 +204,7 @@ gnome_setup(){
 	warn "mkdir /home/$user/.tmux/plugins/tmux-themepack/powerline/script/\n"
    	warn "cp $directory/script_htb_vpn.sh /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
     warn "--------------------------------------------------------------------------------------------"
-   	err "\n\t\t[!] WRITE THE FOLLOWING IN \"/etc/cron.d\" [!]"
+   	err "\n\t\t[!] RUN 'cronie -e' AND ENTER THE FOLLOWING [!]"
     warn "---------------------------------------------------------------------------------------------------"
    	warn "* * * * * /usr/bin/bash /home/lepra/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
     warn "---------------------------------------------------------------------------------------------------"
