@@ -98,6 +98,7 @@ install_tools(){
 		blackarch/nishang
 		blackarch/metasploit
 		blackarch/sqlmap
+        blackarch/ffuf
 		blackarch/windows-binaries
 		blackarch/binwalk
 		blackarch/radare2
