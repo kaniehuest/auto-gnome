@@ -30,16 +30,16 @@ EOF
 tmux_configuration(){
 	msg "Configuring tmux"
 	git clone https://github.com/tmux-plugins/tpm /home/$user/.tmux/plugins/tpm &>/dev/null
-	cat $directory/tmux.conf > /home/$user/.tmux.conf
+	cat $directory/config_files/tmux.conf > /home/$user/.tmux.conf
 }
 
 zsh_configuration(){
 	msg "Configuring zsh"
 	git clone https://github.com/zsh-users/zsh-autosuggestions /home/$user/.zsh/zsh-autosuggestions &>/dev/null
-	cat $directory/zshrc > /home/$user/.zshrc
-	cat $directory/alacritty.yml > /home/$user/.alacritty.yml
+	cat $directory/config_files/zshrc > /home/$user/.zshrc
+	cat $directory/config_files/alacritty.yml > /home/$user/.alacritty.yml
 	mkdir -p /home/$user/.config/nvim
-	cat $directory/init.vim > /home/$user/.config/nvim/init.vim
+	cat $directory/config_files/init.vim > /home/$user/.config/nvim/init.vim
 }
 
 install_yay(){
@@ -55,8 +55,8 @@ install_yay(){
 	yay_packages="librewolf-bin 
 		brave-bin 
 		zsh-theme-powerlevel10k-git
-        aur/sqsh
-        aur/exploit-db-git
+		aur/sqsh
+		aur/exploit-db-git
 		alacritty-themes"
 	yay -S $yay_packages --noconfirm &>/dev/null
 }
@@ -64,15 +64,18 @@ install_yay(){
 install_tools(){
 	packages="core/man-db
 		core/man-pages
-        core/mlocate
+		core/mlocate
 		core/net-tools
 		core/linux-headers
 		core/perl
+		core/traceroute
 		core/cronie
 		core/python
-        core/nfs-utils
+		core/nfs-utils
 		extra/xclip
 		extra/htop
+		extra/whois
+		extra/bind
 		extra/python-pip
 		extra/python2
 		extra/gtkmm3
@@ -89,6 +92,7 @@ install_tools(){
 		extra/postgresql
 		community/tmux
 		community/neofetch
+		community/tealdeer
 		community/alacritty
 		community/cmatrix
 		community/lsd
@@ -98,7 +102,7 @@ install_tools(){
 		blackarch/nishang
 		blackarch/metasploit
 		blackarch/sqlmap
-        blackarch/ffuf
+		blackarch/ffuf
 		blackarch/windows-binaries
 		blackarch/binwalk
 		blackarch/radare2
@@ -184,7 +188,7 @@ check_priv(){
 
 gnome_setup(){
 	tput civis
-    banner
+	banner
 	check_priv
 	user=$(whoami)
 	directory=$(pwd)
@@ -197,19 +201,19 @@ gnome_setup(){
 	install_tools
 	zsh_configuration
 	tmux_configuration
-    sudo usermod -s /usr/bin/zsh lepra
+	sudo usermod -s /usr/bin/zsh lepra
 	err "\n\t\t[!] START TMUX AND PRESS \"PREFIX + I\"   [!]"
 	err "\t\t[!] THEN EXECUTE THE FOLLOWING COMMANDS [!]"
-    warn "--------------------------------------------------------------------------------------------"
-	warn "cat $directory/gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme\n"
+	warn "--------------------------------------------------------------------------------------------"
+	warn "cat $directory/config_files/gray.tmuxtheme > /home/$user/.tmux/plugins/tmux-themepack/powerline/default/gray.tmuxtheme\n"
 	warn "mkdir /home/$user/.tmux/plugins/tmux-themepack/powerline/script/\n"
-   	warn "cp $directory/script_htb_vpn.sh /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
-    warn "--------------------------------------------------------------------------------------------"
-   	err "\n\t\t[!] RUN 'cronie -e' AND ENTER THE FOLLOWING [!]"
-    warn "---------------------------------------------------------------------------------------------------"
-   	warn "* * * * * /usr/bin/bash /home/lepra/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
-    warn "---------------------------------------------------------------------------------------------------"
-    err "\n\t\t[!] GO TO \"FONTS\" FOLDER AND INSTALL THE FONTS [!]"
+	warn "cp $directory/config_files/script_htb_vpn.sh /home/$user/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
+	warn "--------------------------------------------------------------------------------------------"
+	err "\n\t\t[!] RUN 'cronie -e' AND ENTER THE FOLLOWING [!]"
+	warn "--------------------------------------------------------------------------------------------"
+	warn "* * * * * /usr/bin/bash /home/lepra/.tmux/plugins/tmux-themepack/powerline/script/script_htb_vpn.sh"
+	warn "--------------------------------------------------------------------------------------------"
+	err "\n\t\t[!] GO TO \"FONTS\" FOLDER AND INSTALL THE FONTS [!]"
 	tput cnorm
 }
 gnome_setup
