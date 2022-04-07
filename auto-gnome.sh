@@ -113,6 +113,7 @@ install_tools(){
 		blackarch/impacket
 		blackarch/smbmap
 		blackarch/john
+		blackarch/ipmitool
 		blackarch/hashcat
 		blackarch/hashcat-utils
 		blackarch/cewl
